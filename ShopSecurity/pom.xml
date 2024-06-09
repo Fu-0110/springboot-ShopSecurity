@@ -21,6 +21,12 @@
     </properties>
 
     <dependencies>
+        <!-- 設定 MyBatis 分頁外掛程式 -->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.4.1</version>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
