@@ -2,6 +2,7 @@ package com.louis.shopsecurity.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.louis.shopsecurity.controller.result.BaseResult;
+import com.louis.shopsecurity.jwt.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,7 @@ import java.io.PrintWriter;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     private AuthenticationSuccessHandler authenticationSuccessHandler;
     @Autowired
@@ -42,6 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .and()
             .logout()
             .and()
+            .addFilterBefore(new JwtAuthenticationFilter() , UsernamePasswordAuthenticationFilter.class)
             .csrf()
             .disable()
             .exceptionHandling()
@@ -75,5 +79,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 }
-
 
