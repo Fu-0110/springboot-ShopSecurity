@@ -21,25 +21,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/book")
 public class BookController {
+
     @Autowired
     private BookService bookService;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResult> getBook (@PathVariable int id) {
         Book book = bookService.getBook(id);
+
         if (book != null) {
+
             List<Book> books = new ArrayList<>();
             books.add(book);
             translateBookImgUrl(books);
+
             DataResult<Book> result = new DataResult<>();
             result.setCode(HttpStatus.OK.value());
             result.setMsg("成功");
             result.setData(book);
+
             return ResponseEntity.ok(result);
         }
         else {
             BaseResult result = new BaseResult(HttpStatus.BAD_REQUEST.value() , "参数不合法");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                 .body(result);
         }
     }
 
@@ -47,10 +54,12 @@ public class BookController {
     public ResponseEntity<BaseResult> getHotBooks () {
         List<Book> books = bookService.getBooksByHot();
         translateBookImgUrl(books);
+
         DataResult<List<Book>> result = new DataResult<>();
         result.setCode(HttpStatus.OK.value());
         result.setMsg("成功");
         result.setData(books);
+
         return ResponseEntity.ok(result);
     }
 
@@ -58,10 +67,12 @@ public class BookController {
     public ResponseEntity<BaseResult> getNewBooks () {
         List<Book> books = bookService.getBooksByNew();
         translateBookImgUrl(books);
+
         DataResult<List<Book>> result = new DataResult<>();
         result.setCode(HttpStatus.OK.value());
         result.setMsg("成功");
         result.setData(books);
+
         return ResponseEntity.ok(result);
     }
 
@@ -101,11 +112,13 @@ public class BookController {
     private ResponseEntity<BaseResult> getPaginationResult (List<Book> books) {
         long total = ((Page)books).getTotal();
         translateBookImgUrl(books);
+
         PaginationResult<List<Book>> result = new PaginationResult<List<Book>>();
         result.setCode(HttpStatus.OK.value());
         result.setMsg("成功");
         result.setData(books);
         result.setTotal(total);
+
         return ResponseEntity.ok(result);
     }
 

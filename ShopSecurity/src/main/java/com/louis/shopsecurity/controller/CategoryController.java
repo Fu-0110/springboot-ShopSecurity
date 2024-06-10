@@ -37,15 +37,18 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<BaseResult> getCategoryById (@PathVariable int id) {
         Category category = categoryService.getCategoryById(id);
+
         if (category != null) {
             DataResult<Category> result = new DataResult<>();
             result.setCode(HttpStatus.OK.value());
             result.setMsg("成功");
             result.setData(category);
+
             return ResponseEntity.ok(result);
         }
         else {
             BaseResult result = new BaseResult(HttpStatus.BAD_REQUEST.value() , "参数不合法");
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
     }
@@ -53,15 +56,18 @@ public class CategoryController {
     @GetMapping("/parent/{id}")
     public ResponseEntity<BaseResult> getChildrenByParent (@PathVariable int id) {
         List<Category> categories = categoryService.getChildrenByParent(id);
+
         if (categories.size() > 0) {
             DataResult<List<Category>> result = new DataResult<>();
             result.setCode(HttpStatus.OK.value());
             result.setMsg("成功");
             result.setData(categories);
+
             return ResponseEntity.ok(result);
         }
         else {
             BaseResult result = new BaseResult(HttpStatus.BAD_REQUEST.value() , "参数不合法");
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
         }
     }
