@@ -11,10 +11,10 @@
     </parent>
 
     <groupId>com.louis</groupId>
-    <artifactId>ShopSecurity</artifactId>
+    <artifactId>shop-security</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>ShopSecurity</name>
-    <description>ShopSecurity</description>
+    <description>shop-security</description>
 
     <properties>
         <java.version>11</java.version>
