@@ -43,7 +43,7 @@ public class BookController {
             return ResponseEntity.ok(result);
         }
         else {
-            BaseResult result = new BaseResult(HttpStatus.BAD_REQUEST.value() , "参数不合法");
+            BaseResult result = new BaseResult(HttpStatus.BAD_REQUEST.value() , "參數不合法");
 
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .body(result);
@@ -107,7 +107,7 @@ public class BookController {
      * 建構分頁資料物件
      *
      * @param books 圖書列表
-     * @return ResponseEntity對象
+     * @return ResponseEntity
      */
     private ResponseEntity<BaseResult> getPaginationResult (List<Book> books) {
         long total = ((Page)books).getTotal();
@@ -123,7 +123,7 @@ public class BookController {
     }
 
     /**
-     * 對圖書封面小圖和大圖的URL進行轉換
+     * 對圖書封面小圖、大圖的URL 進行轉換
      *
      * @param books 圖書列表
      */
@@ -140,9 +140,10 @@ public class BookController {
      * @return 上下文路徑
      */
     private String getServerInfo () {
-        ServletRequestAttributes attrs = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+
         StringBuffer sb = new StringBuffer();
-        HttpServletRequest request = attrs.getRequest();
+        HttpServletRequest request = servletRequestAttributes.getRequest();
         sb.append(request.getContextPath());
         return sb.toString();
     }

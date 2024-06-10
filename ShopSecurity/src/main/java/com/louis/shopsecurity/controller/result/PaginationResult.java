@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaginationResult <T> extends DataResult<T>{
+public class PaginationResult<T> extends DataResult<T> {
     private long total;
 }

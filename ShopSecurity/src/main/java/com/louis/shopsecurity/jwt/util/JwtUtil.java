@@ -18,31 +18,31 @@ public class JwtUtil {
      *
      * @param payloadStr 有效酬載
      * @param secret     金鑰
-     * @return JWS串
+     * @return JWS字串
      * @throws JOSEException
      */
     public static String generateTokenByHMAC (String payloadStr , String secret) throws JOSEException {
 
-        //建立JWS標頭，設定簽名演算法和類型
+        // 建立 JWSHeader，設定簽名演算法和類型
         JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.HS256).type(JOSEObjectType.JWT)
                                                                        .build();
 
-        //將酬載資訊封裝到Payload中
+        // 將酬載資訊封裝到 Payload 中
         Payload payload = new Payload(payloadStr);
 
-        //建立JWS物件
+        // 建立 JWSObject
         JWSObject jwsObject = new JWSObject(jwsHeader , payload);
 
-        //建立HMAC簽名器
+        // 建立 HMAC 簽名器
         JWSSigner jwsSigner = new MACSigner(secret);
 
-        //簽名
+        // 簽名
         jwsObject.sign(jwsSigner);
         return jwsObject.serialize();
     }
 
     /**
-     * 驗證簽名，提取有效酬載，以PayloadDto物件形式傳回
+     * 驗證簽名，提取有效酬載，以 PayloadDto 傳回
      *
      * @param token  JWS串
      * @param secret 金鑰
@@ -52,10 +52,16 @@ public class JwtUtil {
      */
     public static PayloadDto verifyTokenByHMAC (String token , String secret) throws ParseException, JOSEException {
 
-        //從token中解析JWS物件
-        JWSObject jwsObject = JWSObject.parse(token);
+        //從 token 中解析出 JWSObject
+        JWSObject jwsObject = null;
+        try {
+            jwsObject = JWSObject.parse(token);
+        }
+        catch (ParseException e) {
+            throw new JOSEException("token解析失敗！");
+        }
 
-        //建立HMAC驗證器
+        //建立 HMAC 驗證器
         JWSVerifier jwsVerifier = new MACVerifier(secret);
         if (!jwsObject.verify(jwsVerifier)) {
             throw new JOSEException("token簽名不合法！");

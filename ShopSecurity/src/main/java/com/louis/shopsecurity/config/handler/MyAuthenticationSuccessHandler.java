@@ -9,6 +9,8 @@ import com.louis.shopsecurity.controller.result.BaseResult;
 import com.louis.shopsecurity.jwt.dto.PayloadDto;
 import com.louis.shopsecurity.jwt.util.JwtUtil;
 import com.nimbusds.jose.JOSEException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,10 +29,21 @@ import java.util.List;
 
 @Component
 public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(MyAuthenticationSuccessHandler.class);
+
     @Override
     public void onAuthenticationSuccess (
             HttpServletRequest request , HttpServletResponse response , Authentication authentication
     ) throws IOException, ServletException {
+
+        logger.info(" SuccessHandler Request Method: {}", request.getMethod());
+        logger.info(" SuccessHandler Request URL: {}", request.getRequestURL());
+        logger.info(" SuccessHandler Remote Address: {}", request.getRemoteAddr());
+        logger.info(" SuccessHandler Remote Host: {}", request.getRemoteHost());
+        logger.info(" SuccessHandler Protocol: {}", request.getProtocol());
+        logger.info(" SuccessHandler Session ID: {}", request.getRequestedSessionId());
+
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetails) {
             UserDetails user = (UserDetails)principal;
@@ -41,7 +54,7 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             });
 
             Date now = new Date();
-            Date exp = DateUtil.offsetSecond(now , 60 * 60);
+            Date exp = DateUtil.offsetSecond(now , 60);    // 秒
             PayloadDto payloadDto = PayloadDto.builder()
                                               .sub(user.getUsername())
                                               .iat(now.getTime())
@@ -55,17 +68,22 @@ public class MyAuthenticationSuccessHandler implements AuthenticationSuccessHand
             try {
                 token = JwtUtil.generateTokenByHMAC(
                         // nimbus-jose-jwt 所使用的 HMAC SHA256 演算法
-                        // 所需金鑰長度至少要256位元(32位元組)，因此先用md5加密一下
+                        // 所需金鑰長度至少要 256bit (32byte)，因此先用 md5 加密一下
                         JSONUtil.toJsonStr(payloadDto) , SecureUtil.md5(JwtUtil.DEFAULT_SECRET));
-                response.setHeader("Authorization" , token);
 
+                response.setHeader("Authorization" , token);
                 response.setContentType("application/json;charset=UTF-8");
-                BaseResult result = new BaseResult(HttpServletResponse.SC_OK , "登录成功");
                 response.setStatus(HttpServletResponse.SC_OK);
-                PrintWriter out = response.getWriter();
-                //使用Spring Boot預設的Jackson JSON函式庫中的ObjectMapper類別將物件轉換為JSON字串
+
+                BaseResult result = new BaseResult(HttpServletResponse.SC_OK , "登入成功");
+                logger.info(" MyAuthenticationSuccessHandler : {}", "登入成功");
+                logger.info(" MyAuthenticationSuccessHandler Token : {}", token);
+
+                //使用 ObjectMapper 將物件轉換為JSON字串
                 ObjectMapper mapper = new ObjectMapper();
                 String json = mapper.writeValueAsString(result);
+
+                PrintWriter out = response.getWriter();
                 out.write(json);
                 out.close();
             }
