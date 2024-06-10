@@ -3,7 +3,7 @@
 ## 項目簡介
 
 以前後端分離方式開發圖書電子商場的後端程式，後端程式分為 分類別模組、圖書模組、評論模組、使用者模組。
-資料存取使用 MyBatis框架，介面採用 RESTful 風格設計，安全性原則採用 Spirng Security 來實作，並利用 JWT 實現 Token 驗證。
+資料存取使用 MyBatis，介面採用 RESTful 風格設計，安全性原則採用 Spirng Security 來實作，並利用 JWT 實現 Token 驗證。
 用 @RestControllerAdvice 定義全局的異常處理。
 
 ### 使用技術和版本
@@ -11,7 +11,7 @@
 - **Spring Boot**: 2.6.4
 - **Spring Security**: 安全框架
 - **MySQL**: 8.3.0
-- **MyBatis框架**: 數據庫訪問
+- **MyBatis**: 數據庫訪問
 - **pagehelper**: MyBatis分頁插件
 - **JWT(JSON Web Token)**: 實作token驗證
 - **devtools**: 熱部署
